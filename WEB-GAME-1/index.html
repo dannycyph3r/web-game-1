@@ -3,14 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Web Game</title>
+    <title>KIYO:The Game</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <h2>KI-YO</h2>
+
+<!-- INTRO SCREEN -->
+<div id="intro-screen" class="screen">
+    <h1>KIYO</h1>
+    <p>In the distant future, Earth’s atmosphere is collapsing, and <strong>fragments of energy shards</strong> are falling from the sky.</p>
+    <p>You are <strong>KIYO</strong>, the last shard runner—an elite explorer tasked with collecting power shards to restore the planet’s energy core.</p>
+    <p>Dodge falling debris, collect energy shards, and <strong>level up your abilities</strong> to reach the <strong>final level</strong>, where you’ll face the <strong>Shatterstorm</strong>—the last trial to save the world.</p>
+    <button id="start-btn">Start Game</button>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="game-screen" class="screen hidden">
     <h1 id="score">Score: 0</h1>
     <canvas id="gameCanvas" width="800" height="400"></canvas>
-    <script src="main.js"></script>
+</div>
+
+<script src="main.js"></script>
 </body>
 </html>
