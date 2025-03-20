@@ -11,19 +11,6 @@ let player = {
     color: 'blue'
 };
 
-// Draw player function
-function drawPlayer() {
-    ctx.fillStyle = player.color;
-    ctx.fillRect(player.x, player.y, player.width, player.height);
-}
-
-// Update game frame
-function update() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawPlayer();
-    requestAnimationFrame(update);
-}
-
 // Movement speed
 let keys = {
     ArrowRight: false,
@@ -32,7 +19,11 @@ let keys = {
     ArrowDown: false
 };
 
-// Event listeners for smooth movement
+// Obstacles array
+let obstacles = [];
+let score = 0;
+
+// 🎯 Event listeners for smooth movement
 document.addEventListener('keydown', (event) => {
     if (keys.hasOwnProperty(event.key)) keys[event.key] = true;
 });
@@ -41,7 +32,13 @@ document.addEventListener('keyup', (event) => {
     if (keys.hasOwnProperty(event.key)) keys[event.key] = false;
 });
 
-// Update movement logic
+// 🎯 Draw player
+function drawPlayer() {
+    ctx.fillStyle = player.color;
+    ctx.fillRect(player.x, player.y, player.width, player.height);
+}
+
+// 🎯 Player movement logic
 function movePlayer() {
     if (keys.ArrowRight && player.x + player.width < canvas.width) player.x += player.speed;
     if (keys.ArrowLeft && player.x > 0) player.x -= player.speed;
@@ -49,21 +46,9 @@ function movePlayer() {
     if (keys.ArrowDown && player.y + player.height < canvas.height) player.y += player.speed;
 }
 
-// Update function (now with movement)
-function update() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    movePlayer();
-    drawPlayer();
-    requestAnimationFrame(update);
-}
-
-update();
-
-
-let obstacles = [];
-
+// 🎯 Create obstacles
 function createObstacle() {
-    const size = Math.random() * 40 + 20; // Random size
+    const size = Math.random() * 40 + 20;  // Random size
     const obstacle = {
         x: canvas.width,
         y: Math.random() * (canvas.height - size),
@@ -74,12 +59,12 @@ function createObstacle() {
     obstacles.push(obstacle);
 }
 
-// Move obstacles
+// 🎯 Move obstacles
 function moveObstacles() {
     for (let i = 0; i < obstacles.length; i++) {
         obstacles[i].x -= obstacles[i].speed;
 
-        // Remove obstacles that go off-screen
+        // Remove obstacles that move off-screen
         if (obstacles[i].x + obstacles[i].width < 0) {
             obstacles.splice(i, 1);
             i--;
@@ -87,7 +72,7 @@ function moveObstacles() {
     }
 }
 
-// Draw obstacles
+// 🎯 Draw obstacles
 function drawObstacles() {
     ctx.fillStyle = 'red';
     for (let obs of obstacles) {
@@ -95,7 +80,7 @@ function drawObstacles() {
     }
 }
 
-// Collision detection
+// 🎯 Collision detection
 function checkCollision() {
     for (let obs of obstacles) {
         if (
@@ -104,35 +89,34 @@ function checkCollision() {
             player.y < obs.y + obs.height &&
             player.y + player.height > obs.y
         ) {
-            alert("Game Over! Reload to play again.");
+            alert(`Game Over! Your score: ${score}`);
             document.location.reload();
         }
     }
 }
 
-// Update function (now with obstacles and collision)
-function update() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    movePlayer();
-    moveObstacles();
-    drawPlayer();
-    drawObstacles();
-    checkCollision();
-    requestAnimationFrame(update);
-}
-
-// Generate obstacles every 2 seconds
-setInterval(createObstacle, 2000);
-
-update();
-
-let score = 0;
-
+// 🎯 Update the score
 function updateScore() {
     score++;
     document.getElementById('score').innerText = `Score: ${score}`;
 }
 
-// Increase score every second
-setInterval(updateScore, 1000);
+// 🎯 Main update function (combined game loop)
+function update() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    movePlayer();
+    moveObstacles();
+    drawPlayer();
+    drawObstacles();
+    checkCollision();
+
+    requestAnimationFrame(update);
+}
+
+// 🎯 Game loop setup
+setInterval(createObstacle, 2000);  // Create new obstacles every 2 seconds
+setInterval(updateScore, 1000);     // Increase score every second
+
+// Start the game
+update();
